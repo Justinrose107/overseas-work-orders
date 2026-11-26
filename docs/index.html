@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>海外工单看板</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="top"><div class="shell bar">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▤</span> 海外工单</a>
+    <button id="settings" class="button secondary" type="button">数据连接</button>
+  </div></header>
+  <main class="shell">
+    <div class="overview">
+      <div><h1>海外工单看板</h1><p>跟进维修、保养、安装和 FCO 工单的处理进度。</p></div>
+      <div class="sync"><span id="sync-badge" class="badge">尚未连接</span><span id="last-sync">等待 ShareCRM 数据</span></div>
+    </div>
+    <section id="summary" class="cards" aria-label="未结工单提醒档位">
+      <article><div class="card-label">未结工单</div><strong id="open-count">—</strong><p>当前待处理</p></article>
+      <article><div class="card-label">24 小时</div><strong id="tier-24">—</strong><p>已满 24 小时，未满 48 小时</p></article>
+      <article><div class="card-label">48 小时</div><strong id="tier-48">—</strong><p>已满 48 小时，未满 72 小时</p></article>
+      <article><div class="card-label">72 小时及以上</div><strong id="tier-72">—</strong><p>优先跟进</p></article>
+    </section>
+    <section class="panel" aria-labelledby="list-title">
+      <div class="panel-header"><div><h2 id="list-title">工单明细</h2><p id="reminder-status">飞书提醒待配置</p></div><button class="button secondary" id="refresh" type="button" disabled>刷新</button></div>
+      <div class="filters">
+        <label class="search"><span class="visually-hidden">搜索工单号</span><input id="search" type="search" placeholder="搜索工单号"></label>
+        <label><span class="visually-hidden">工单类别</span><select id="type"><option value="">全部类别</option><option value="Repair">维修</option><option value="Maintenance">保养</option><option value="Installation">安装</option><option value="FCO">FCO</option></select></label>
+        <label><span class="visually-hidden">工单状态</span><select id="state"><option value="open">未结工单</option><option value="">全部状态</option><option value="closed">已关闭</option><option value="cancelled">已取消</option></select></label>
+        <label><span class="visually-hidden">提醒档位</span><select id="tier"><option value="">全部时长</option><option value="24">24–48 小时</option><option value="48">48–72 小时</option><option value="72">72 小时及以上</option></select></label>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th scope="col">工单号</th><th scope="col">类别</th><th scope="col">当前状态</th><th scope="col">创建时间（北京时间）</th><th scope="col">工单时长</th><th scope="col">已发提醒</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div id="empty" class="empty"><div class="empty-mark" aria-hidden="true">▤</div><strong id="empty-title">等待连接工单数据</strong><p id="empty-text">连接后台后，这里会显示同步进来的工单。</p><button id="empty-connect" class="button primary" type="button">连接数据</button></div>
+      <div class="panel-footer"><span id="result-count"></span><span>状态以最近一次成功同步为准</span></div>
+    </section>
+    <p id="feedback" class="feedback" role="status" hidden></p>
+  </main>
+  <dialog id="connection" aria-labelledby="connection-title">
+    <form id="connection-form">
+      <div class="dialog-header"><h2 id="connection-title">连接数据</h2><button id="cancel" type="button" class="button secondary">关闭</button></div>
+      <p>填写工单同步服务提供的 HTTPS 地址和只读访问令牌。</p>
+      <label for="endpoint">服务地址</label><input id="endpoint" type="url" placeholder="https://work-orders.example.com" required>
+      <label for="read-key">只读访问令牌</label><input id="read-key" type="password" autocomplete="off" required>
+      <p id="connection-error" class="error" role="alert" hidden></p>
+      <button id="connect" class="button primary" type="submit">连接看板</button>
+    </form>
+  </dialog>
+</body>
+</html>
